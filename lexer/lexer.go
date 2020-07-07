@@ -6,7 +6,7 @@ type Lexer struct {
 	s []rune
 }
 
-func newLexer(s string) *Lexer {
+func NewLexer(s string) *Lexer {
 	return &Lexer{
 		s: []rune(s),
 	}
