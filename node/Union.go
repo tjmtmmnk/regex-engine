@@ -1,0 +1,36 @@
+package node
+
+import "github.com/tjmtmmnk/regex-engine/nfa"
+
+type Union struct {
+	Ope1 Node
+	Ope2 Node
+}
+
+func NewUnion(ope1 Node, ope2 Node) *Union {
+	return &Union{
+		Ope1: ope1,
+		Ope2: ope2,
+	}
+}
+
+func (u *Union) Assemble(ctx *nfa.Context) *nfa.Fragment {
+	fragment := nfa.NewFragment(ctx)
+
+	frg1 := u.Ope1.Assemble(ctx)
+	frg2 := u.Ope2.Assemble(ctx)
+
+	q := nfa.NewState(ctx)
+
+	fragment = frg1.MergeRule(ctx, frg2)
+
+	fragment.AddRule(q, 'ε', frg1.Start)
+	fragment.AddRule(q, 'ε', frg2.Start)
+
+	// set new start and accepts
+	fragment.Start = q
+	fragment.Accepts = fragment.Accepts.Union(frg1.Accepts)
+	fragment.Accepts = fragment.Accepts.Union(frg2.Accepts)
+
+	return fragment
+}
