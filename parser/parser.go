@@ -36,6 +36,11 @@ func (p *Parser) moveWithValidation(expect token.Type) {
 	p.move()
 }
 
+func (p *Parser) GetAST() node.Node {
+	ast := p.expression()
+	return ast
+}
+
 func (p *Parser) expression() node.Node {
 	subexprNode := p.subexpr()
 	p.moveWithValidation(token.EOF)
@@ -44,25 +49,29 @@ func (p *Parser) expression() node.Node {
 
 func (p *Parser) subexpr() node.Node {
 	seqNode := p.seq()
-	if p.look.Ty == token.LPAREN || p.look.Ty == token.CHARACTER {
-		subexprNode := p.subexpr()
-		return node.NewUnion(seqNode, subexprNode)
+	if p.look.Ty == token.UNION {
+		p.moveWithValidation(token.UNION)
+		seqNode2 := p.seq()
+		return node.NewUnion(seqNode, seqNode2)
 	}
 	return seqNode
 }
 
 func (p *Parser) seq() node.Node {
 	if p.look.Ty == token.LPAREN || p.look.Ty == token.CHARACTER {
-		return p.subseq()
+		subseqNode := p.subseq()
+		return subseqNode
 	}
-	return node.NewCharacter('ε')
+	characterNode := node.NewCharacter('ε')
+	return characterNode
 }
 
 func (p *Parser) subseq() node.Node {
 	sufopeNode := p.sufope()
 	if p.look.Ty == token.LPAREN || p.look.Ty == token.CHARACTER {
 		subseqNode := p.subseq()
-		return node.NewConcat(sufopeNode, subseqNode)
+		concatNode := node.NewConcat(sufopeNode, subseqNode)
+		return concatNode
 	}
 	return sufopeNode
 }
@@ -72,10 +81,12 @@ func (p *Parser) sufope() node.Node {
 	switch p.look.Ty {
 	case token.STAR:
 		p.moveWithValidation(token.STAR)
-		return node.NewStar(factorNode)
+		starNode := node.NewStar(factorNode)
+		return starNode
 	case token.PLUS:
 		p.moveWithValidation(token.PLUS)
-		return node.NewPlus(factorNode)
+		plusNode := node.NewPlus(factorNode)
+		return plusNode
 	}
 	return factorNode
 }
@@ -86,9 +97,9 @@ func (p *Parser) factor() node.Node {
 		subexprNode := p.subexpr()
 		p.moveWithValidation(token.RPAREN)
 		return subexprNode
-	} else {
-		characterNode := node.NewCharacter(p.look.V)
-		p.moveWithValidation(token.CHARACTER)
-		return characterNode
 	}
+	characterNode := node.NewCharacter(p.look.V)
+	p.moveWithValidation(token.CHARACTER)
+	return characterNode
+
 }

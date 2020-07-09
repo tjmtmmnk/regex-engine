@@ -1,6 +1,9 @@
 package node
 
-import "github.com/tjmtmmnk/regex-engine/nfa"
+import (
+	"fmt"
+	"github.com/tjmtmmnk/regex-engine/nfa"
+)
 
 type Concat struct {
 	Ope1 Node
@@ -27,4 +30,9 @@ func (c *Concat) Assemble(ctx *nfa.Context) *nfa.Fragment {
 		fragment.AddRule(q.(nfa.State), 'ε', frg2.Start)
 	}
 
+	return fragment
+}
+
+func (c *Concat) SubtreeString() string {
+	return fmt.Sprintf("\x1b[31mconcat(%s, %s\x1b[31m)\x1b[0m", c.Ope1.SubtreeString(), c.Ope2.SubtreeString())
 }

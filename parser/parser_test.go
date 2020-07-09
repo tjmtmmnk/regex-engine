@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/tjmtmmnk/regex-engine/token"
 	"testing"
 )
@@ -14,4 +15,10 @@ func TestMoveWithValidation(t *testing.T) {
 	if p.look.V != '+' || p.look.Ty != token.PLUS {
 		t.Fail()
 	}
+}
+
+func TestGetAST(t *testing.T) {
+	p := NewParser("(ab+)|c*")
+	ast := p.GetAST()
+	fmt.Println(ast.SubtreeString())
 }

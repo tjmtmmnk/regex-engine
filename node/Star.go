@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"github.com/tjmtmmnk/regex-engine/nfa"
 )
 
@@ -14,8 +15,8 @@ func NewStar(ope Node) *Star {
 	}
 }
 
-func (c *Star) Assemble(ctx *nfa.Context) *nfa.Fragment {
-	frg := c.Assemble(ctx)
+func (s *Star) Assemble(ctx *nfa.Context) *nfa.Fragment {
+	frg := s.Ope.Assemble(ctx)
 
 	fragment := frg.CreateSkeleton(ctx)
 
@@ -23,10 +24,18 @@ func (c *Star) Assemble(ctx *nfa.Context) *nfa.Fragment {
 		fragment.AddRule(q.(nfa.State), 'ε', frg.Start)
 	}
 
-	s := nfa.NewState(ctx)
-	fragment.AddRule(s, 'ε', frg.Start)
+	q := nfa.NewState(ctx)
 
-	fragment.Start = s
+	fragment.AddRule(q, 'ε', frg.Start)
+
+	fragment.Start = q
+
+	fragment.Accepts.Union(frg.Accepts)
+	fragment.Accepts.Add(q)
 
 	return fragment
+}
+
+func (s *Star) SubtreeString() string {
+	return fmt.Sprintf("\x1b[33mstar(%s\x1b[33m)\x1b[0m", s.Ope.SubtreeString())
 }

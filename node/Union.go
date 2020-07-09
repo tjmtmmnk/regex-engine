@@ -1,6 +1,9 @@
 package node
 
-import "github.com/tjmtmmnk/regex-engine/nfa"
+import (
+	"fmt"
+	"github.com/tjmtmmnk/regex-engine/nfa"
+)
 
 type Union struct {
 	Ope1 Node
@@ -33,4 +36,8 @@ func (u *Union) Assemble(ctx *nfa.Context) *nfa.Fragment {
 	fragment.Accepts = fragment.Accepts.Union(frg2.Accepts)
 
 	return fragment
+}
+
+func (u *Union) SubtreeString() string {
+	return fmt.Sprintf("\x1b[36munion(%s, %s\x1b[36m)\x1b[0m", u.Ope1.SubtreeString(), u.Ope2.SubtreeString())
 }

@@ -18,7 +18,9 @@ func NewFragment(ctx *Context) *Fragment {
 	}
 }
 
-func (f *Fragment) Build()
+func (f *Fragment) Build() *NFA {
+	return NewNFA(f.Start, f.Accepts, f.Rules)
+}
 
 func (f *Fragment) CreateSkeleton(ctx *Context) (Skeleton *Fragment) {
 	Skeleton = NewFragment(ctx)
@@ -27,22 +29,22 @@ func (f *Fragment) CreateSkeleton(ctx *Context) (Skeleton *Fragment) {
 }
 
 func (f *Fragment) AddRule(from State, c rune, to State) {
-	rules, ok := f.Rules[NewRuleArgs(from, c)]
+	_, ok := f.Rules[NewRuleArgs(from, c)]
 	if ok {
-		rules.Add(to)
+		f.Rules[NewRuleArgs(from, c)].Add(to)
 	} else {
-		rules = mapset.NewSet(to)
+		f.Rules[NewRuleArgs(from, c)] = mapset.NewSet(to)
 	}
 }
 
 func (f *Fragment) MergeRule(ctx *Context, frg *Fragment) (mergedFragment *Fragment) {
 	mergedFragment = f.CreateSkeleton(ctx)
 	for k, v := range frg.Rules {
-		rules, ok := mergedFragment.Rules[k]
+		_, ok := mergedFragment.Rules[k]
 		if !ok {
-			rules = mapset.NewSet()
+			mergedFragment.Rules[k] = mapset.NewSet()
 		}
-		rules = rules.Union(v)
+		mergedFragment.Rules[k] = mergedFragment.Rules[k].Union(v)
 	}
 	return
 }

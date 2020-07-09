@@ -1,6 +1,9 @@
 package node
 
-import "github.com/tjmtmmnk/regex-engine/nfa"
+import (
+	"fmt"
+	"github.com/tjmtmmnk/regex-engine/nfa"
+)
 
 type Character struct {
 	V rune
@@ -24,4 +27,8 @@ func (c *Character) Assemble(ctx *nfa.Context) *nfa.Fragment {
 	fragment.Accepts.Add(q2)
 
 	return fragment
+}
+
+func (c *Character) SubtreeString() string {
+	return fmt.Sprintf("\x1b[32mcharacter('%s')\x1b[32m", string(c.V))
 }
