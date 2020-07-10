@@ -1,6 +1,7 @@
 package nfa
 
 import (
+	"fmt"
 	mapset "github.com/8ayac/golang-set"
 	"github.com/tjmtmmnk/regex-engine/automaton/common"
 	"github.com/tjmtmmnk/regex-engine/automaton/dfa"
@@ -24,6 +25,7 @@ func (nfa *NFA) ToWithoutEpsilon() {
 	if nfa.Accepts.IsSubset(nfa.epsilonClosure(nfa.Start)) {
 		nfa.Accepts.Add(nfa.Start)
 	}
+	nfa.Rules = nfa.removeEpsilonRule()
 }
 
 func (nfa *NFA) ToDFA() *dfa.DFA {
@@ -119,9 +121,21 @@ func (nfa *NFA) removeEpsilonRule() (newRule RuleMap) {
 		for c := range symbols.Iter() {
 			q := q.(common.State)
 			c := c.(rune)
-			epsilonStates := nfa.epsilonExpand(q, c)
-			newRule[NewRuleArgs(q, c)] = mapset.NewSet()
-			newRule[NewRuleArgs(q, c)] = newRule[NewRuleArgs(q, c)].Union(epsilonStates)
+			for ec := range nfa.epsilonClosure(q).Iter() {
+				expand := nfa.epsilonExpand(ec.(common.State), c)
+				s, ok := newRule[NewRuleArgs(q, c)]
+				if !ok {
+					s = mapset.NewSet()
+				}
+				newRule[NewRuleArgs(q, c)] = s.Union(expand)
+			}
+		}
+	}
+
+	// remove empty set
+	for k := range newRule {
+		if newRule[k].Cardinality() == 0 {
+			delete(newRule, k)
 		}
 	}
 	return
