@@ -19,7 +19,7 @@ func NewStar(ope Node) *Star {
 func (s *Star) Assemble(ctx *common.Context) *nfa.Fragment {
 	frg := s.Ope.Assemble(ctx)
 
-	fragment := frg.CreateSkeleton(ctx)
+	fragment := frg.CreateSkeleton()
 
 	for q := range frg.Accepts.Iter() {
 		fragment.AddRule(q.(common.State), 'ε', frg.Start)

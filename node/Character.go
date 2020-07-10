@@ -17,7 +17,7 @@ func NewCharacter(r rune) *Character {
 }
 
 func (c *Character) Assemble(ctx *common.Context) *nfa.Fragment {
-	fragment := nfa.NewFragment(ctx)
+	fragment := nfa.NewFragment()
 
 	q1 := common.NewState(ctx)
 	q2 := common.NewState(ctx)

@@ -11,9 +11,9 @@ type Fragment struct {
 	Rules   RuleMap
 }
 
-func NewFragment(ctx *common.Context) *Fragment {
+func NewFragment() *Fragment {
 	return &Fragment{
-		Start:   common.NewState(ctx),
+		Start:   common.NewStateWithNumber(0),
 		Accepts: mapset.NewSet(),
 		Rules:   RuleMap{},
 	}
@@ -23,8 +23,8 @@ func (f *Fragment) Build() *NFA {
 	return NewNFA(f.Start, f.Accepts, f.Rules)
 }
 
-func (f *Fragment) CreateSkeleton(ctx *common.Context) (Skeleton *Fragment) {
-	Skeleton = NewFragment(ctx)
+func (f *Fragment) CreateSkeleton() (Skeleton *Fragment) {
+	Skeleton = NewFragment()
 	Skeleton.Rules = f.Rules
 	return
 }
@@ -38,8 +38,8 @@ func (f *Fragment) AddRule(from common.State, c rune, to common.State) {
 	}
 }
 
-func (f *Fragment) MergeRule(ctx *common.Context, frg *Fragment) (mergedFragment *Fragment) {
-	mergedFragment = f.CreateSkeleton(ctx)
+func (f *Fragment) MergeRule(frg *Fragment) (mergedFragment *Fragment) {
+	mergedFragment = f.CreateSkeleton()
 	for k, v := range frg.Rules {
 		_, ok := mergedFragment.Rules[k]
 		if !ok {

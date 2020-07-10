@@ -19,17 +19,20 @@ func NewConcat(ope1 Node, ope2 Node) *Concat {
 }
 
 func (c *Concat) Assemble(ctx *common.Context) *nfa.Fragment {
-	fragment := nfa.NewFragment(ctx)
+	fragment := nfa.NewFragment()
 
 	frg1 := c.Ope1.Assemble(ctx)
 	frg2 := c.Ope2.Assemble(ctx)
 
-	fragment = frg1.MergeRule(ctx, frg2)
+	fragment = frg1.MergeRule(frg2)
 
 	// From frg1's accept state to frg2 ε transition
 	for q := range frg1.Accepts.Iter() {
 		fragment.AddRule(q.(common.State), 'ε', frg2.Start)
 	}
+
+	fragment.Start = frg1.Start
+	fragment.Accepts = fragment.Accepts.Union(frg2.Accepts)
 
 	return fragment
 }

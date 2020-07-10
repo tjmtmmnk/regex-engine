@@ -19,14 +19,14 @@ func NewUnion(ope1 Node, ope2 Node) *Union {
 }
 
 func (u *Union) Assemble(ctx *common.Context) *nfa.Fragment {
-	fragment := nfa.NewFragment(ctx)
+	fragment := nfa.NewFragment()
 
 	frg1 := u.Ope1.Assemble(ctx)
 	frg2 := u.Ope2.Assemble(ctx)
 
 	q := common.NewState(ctx)
 
-	fragment = frg1.MergeRule(ctx, frg2)
+	fragment = frg1.MergeRule(frg2)
 
 	fragment.AddRule(q, 'ε', frg1.Start)
 	fragment.AddRule(q, 'ε', frg2.Start)

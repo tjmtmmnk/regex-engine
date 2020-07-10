@@ -19,7 +19,7 @@ func NewPlus(ope Node) *Plus {
 func (p *Plus) Assemble(ctx *common.Context) *nfa.Fragment {
 	frg := p.Ope.Assemble(ctx)
 
-	fragment := frg.CreateSkeleton(ctx)
+	fragment := frg.CreateSkeleton()
 
 	for q := range frg.Accepts.Iter() {
 		fragment.AddRule(q.(common.State), 'ε', frg.Start)
