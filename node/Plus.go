@@ -2,7 +2,8 @@ package node
 
 import (
 	"fmt"
-	"github.com/tjmtmmnk/regex-engine/nfa"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
+	"github.com/tjmtmmnk/regex-engine/automaton/nfa"
 )
 
 type Plus struct {
@@ -15,20 +16,20 @@ func NewPlus(ope Node) *Plus {
 	}
 }
 
-func (p *Plus) Assemble(ctx *nfa.Context) *nfa.Fragment {
+func (p *Plus) Assemble(ctx *common.Context) *nfa.Fragment {
 	frg := p.Ope.Assemble(ctx)
 
 	fragment := frg.CreateSkeleton(ctx)
 
 	for q := range frg.Accepts.Iter() {
-		fragment.AddRule(q.(nfa.State), 'ε', frg.Start)
+		fragment.AddRule(q.(common.State), 'ε', frg.Start)
 	}
 
-	s := nfa.NewState(ctx)
+	s := common.NewState(ctx)
 	fragment.AddRule(s, 'ε', frg.Start)
 
 	fragment.Start = s
-	
+
 	fragment.Accepts.Union(frg.Accepts)
 	fragment.Accepts.Add(s)
 

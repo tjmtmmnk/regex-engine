@@ -1,6 +1,4 @@
-package nfa
-
-import "fmt"
+package common
 
 type Context struct {
 	N int
@@ -14,6 +12,5 @@ func NewContext() *Context {
 
 func (c *Context) Increment() int {
 	c.N++
-	fmt.Println(c.N)
 	return c.N
 }

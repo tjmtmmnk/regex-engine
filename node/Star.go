@@ -2,7 +2,8 @@ package node
 
 import (
 	"fmt"
-	"github.com/tjmtmmnk/regex-engine/nfa"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
+	"github.com/tjmtmmnk/regex-engine/automaton/nfa"
 )
 
 type Star struct {
@@ -15,22 +16,22 @@ func NewStar(ope Node) *Star {
 	}
 }
 
-func (s *Star) Assemble(ctx *nfa.Context) *nfa.Fragment {
+func (s *Star) Assemble(ctx *common.Context) *nfa.Fragment {
 	frg := s.Ope.Assemble(ctx)
 
 	fragment := frg.CreateSkeleton(ctx)
 
 	for q := range frg.Accepts.Iter() {
-		fragment.AddRule(q.(nfa.State), 'ε', frg.Start)
+		fragment.AddRule(q.(common.State), 'ε', frg.Start)
 	}
 
-	q := nfa.NewState(ctx)
+	q := common.NewState(ctx)
 
 	fragment.AddRule(q, 'ε', frg.Start)
 
 	fragment.Start = q
 
-	fragment.Accepts.Union(frg.Accepts)
+	fragment.Accepts = fragment.Accepts.Union(frg.Accepts)
 	fragment.Accepts.Add(q)
 
 	return fragment

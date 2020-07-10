@@ -2,7 +2,8 @@ package node
 
 import (
 	"fmt"
-	"github.com/tjmtmmnk/regex-engine/nfa"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
+	"github.com/tjmtmmnk/regex-engine/automaton/nfa"
 )
 
 type Concat struct {
@@ -17,7 +18,7 @@ func NewConcat(ope1 Node, ope2 Node) *Concat {
 	}
 }
 
-func (c *Concat) Assemble(ctx *nfa.Context) *nfa.Fragment {
+func (c *Concat) Assemble(ctx *common.Context) *nfa.Fragment {
 	fragment := nfa.NewFragment(ctx)
 
 	frg1 := c.Ope1.Assemble(ctx)
@@ -27,7 +28,7 @@ func (c *Concat) Assemble(ctx *nfa.Context) *nfa.Fragment {
 
 	// From frg1's accept state to frg2 ε transition
 	for q := range frg1.Accepts.Iter() {
-		fragment.AddRule(q.(nfa.State), 'ε', frg2.Start)
+		fragment.AddRule(q.(common.State), 'ε', frg2.Start)
 	}
 
 	return fragment

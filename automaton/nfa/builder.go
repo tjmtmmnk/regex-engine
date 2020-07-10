@@ -2,17 +2,18 @@ package nfa
 
 import (
 	mapset "github.com/8ayac/golang-set"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
 )
 
 type Fragment struct {
-	Start   State
+	Start   common.State
 	Accepts mapset.Set
 	Rules   RuleMap
 }
 
-func NewFragment(ctx *Context) *Fragment {
+func NewFragment(ctx *common.Context) *Fragment {
 	return &Fragment{
-		Start:   NewState(ctx),
+		Start:   common.NewState(ctx),
 		Accepts: mapset.NewSet(),
 		Rules:   RuleMap{},
 	}
@@ -22,13 +23,13 @@ func (f *Fragment) Build() *NFA {
 	return NewNFA(f.Start, f.Accepts, f.Rules)
 }
 
-func (f *Fragment) CreateSkeleton(ctx *Context) (Skeleton *Fragment) {
+func (f *Fragment) CreateSkeleton(ctx *common.Context) (Skeleton *Fragment) {
 	Skeleton = NewFragment(ctx)
 	Skeleton.Rules = f.Rules
 	return
 }
 
-func (f *Fragment) AddRule(from State, c rune, to State) {
+func (f *Fragment) AddRule(from common.State, c rune, to common.State) {
 	_, ok := f.Rules[NewRuleArgs(from, c)]
 	if ok {
 		f.Rules[NewRuleArgs(from, c)].Add(to)
@@ -37,7 +38,7 @@ func (f *Fragment) AddRule(from State, c rune, to State) {
 	}
 }
 
-func (f *Fragment) MergeRule(ctx *Context, frg *Fragment) (mergedFragment *Fragment) {
+func (f *Fragment) MergeRule(ctx *common.Context, frg *Fragment) (mergedFragment *Fragment) {
 	mergedFragment = f.CreateSkeleton(ctx)
 	for k, v := range frg.Rules {
 		_, ok := mergedFragment.Rules[k]

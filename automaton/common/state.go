@@ -1,4 +1,4 @@
-package nfa
+package common
 
 type State struct {
 	N int
@@ -7,5 +7,11 @@ type State struct {
 func NewState(ctx *Context) State {
 	return State{
 		N: ctx.Increment(),
+	}
+}
+
+func NewStateWithNumber(n int) State {
+	return State{
+		N: n,
 	}
 }

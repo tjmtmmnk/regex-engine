@@ -2,7 +2,8 @@ package node
 
 import (
 	"fmt"
-	"github.com/tjmtmmnk/regex-engine/nfa"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
+	"github.com/tjmtmmnk/regex-engine/automaton/nfa"
 )
 
 type Union struct {
@@ -17,13 +18,13 @@ func NewUnion(ope1 Node, ope2 Node) *Union {
 	}
 }
 
-func (u *Union) Assemble(ctx *nfa.Context) *nfa.Fragment {
+func (u *Union) Assemble(ctx *common.Context) *nfa.Fragment {
 	fragment := nfa.NewFragment(ctx)
 
 	frg1 := u.Ope1.Assemble(ctx)
 	frg2 := u.Ope2.Assemble(ctx)
 
-	q := nfa.NewState(ctx)
+	q := common.NewState(ctx)
 
 	fragment = frg1.MergeRule(ctx, frg2)
 

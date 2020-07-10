@@ -1,10 +1,11 @@
 package node
 
 import (
-	"github.com/tjmtmmnk/regex-engine/nfa"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
+	"github.com/tjmtmmnk/regex-engine/automaton/nfa"
 )
 
 type Node interface {
 	SubtreeString() string
-	Assemble(c *nfa.Context) *nfa.Fragment
+	Assemble(c *common.Context) *nfa.Fragment
 }

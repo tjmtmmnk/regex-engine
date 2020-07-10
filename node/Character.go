@@ -2,7 +2,8 @@ package node
 
 import (
 	"fmt"
-	"github.com/tjmtmmnk/regex-engine/nfa"
+	"github.com/tjmtmmnk/regex-engine/automaton/common"
+	"github.com/tjmtmmnk/regex-engine/automaton/nfa"
 )
 
 type Character struct {
@@ -15,11 +16,11 @@ func NewCharacter(r rune) *Character {
 	}
 }
 
-func (c *Character) Assemble(ctx *nfa.Context) *nfa.Fragment {
+func (c *Character) Assemble(ctx *common.Context) *nfa.Fragment {
 	fragment := nfa.NewFragment(ctx)
 
-	q1 := nfa.NewState(ctx)
-	q2 := nfa.NewState(ctx)
+	q1 := common.NewState(ctx)
+	q2 := common.NewState(ctx)
 
 	fragment.AddRule(q1, c.V, q2)
 
