@@ -15,6 +15,7 @@ func NewRuntime(d *DFA) *Runtime {
 }
 
 func (r *Runtime) Matching(str string) bool {
+	r.currentState = r.d.Start
 	for _, c := range []rune(str) {
 		if !r.transit(c) {
 			return false
