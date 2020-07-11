@@ -91,6 +91,7 @@ func TestMatching(t *testing.T) {
 			"a":  true,
 			"aa": true,
 			"b":  false,
+			"":   false,
 		}
 
 		for k, v := range expect {
