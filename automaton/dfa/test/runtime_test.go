@@ -29,6 +29,7 @@ func TestMatching(t *testing.T) {
 		for k, v := range expect {
 			isMatch := r.Matching(k)
 			if isMatch != v {
+				t.Logf(k + " is not correct")
 				t.Fail()
 			}
 		}
@@ -45,6 +46,7 @@ func TestMatching(t *testing.T) {
 		for k, v := range expect {
 			isMatch := r.Matching(k)
 			if isMatch != v {
+				t.Logf(k + " is not correct")
 				t.Fail()
 			}
 		}
@@ -61,6 +63,7 @@ func TestMatching(t *testing.T) {
 		for k, v := range expect {
 			isMatch := r.Matching(k)
 			if isMatch != v {
+				t.Logf(k + " is not correct")
 				t.Fail()
 			}
 		}
@@ -76,6 +79,7 @@ func TestMatching(t *testing.T) {
 		for k, v := range expect {
 			isMatch := r.Matching(k)
 			if isMatch != v {
+				t.Logf(k + " is not correct")
 				t.Fail()
 			}
 		}
