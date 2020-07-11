@@ -25,13 +25,12 @@ func (p *Plus) Assemble(ctx *common.Context) *nfa.Fragment {
 		fragment.AddRule(q.(common.State), 'ε', frg.Start)
 	}
 
-	s := common.NewState(ctx)
-	fragment.AddRule(s, 'ε', frg.Start)
+	q := common.NewState(ctx)
+	fragment.AddRule(q, 'ε', frg.Start)
 
-	fragment.Start = s
+	fragment.Start = q
 
-	fragment.Accepts.Union(frg.Accepts)
-	fragment.Accepts.Add(s)
+	fragment.Accepts = fragment.Accepts.Union(frg.Accepts)
 
 	return fragment
 }

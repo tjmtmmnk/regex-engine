@@ -13,7 +13,6 @@ func TestToDFA(t *testing.T) {
 	frg := ast.Assemble(common.NewContext())
 	fmt.Println(ast.SubtreeString())
 	nfa := frg.Build()
-	//_ = nfa.ToDFA()
 	dfa := nfa.ToDFA()
 	fmt.Println(dfa)
 }

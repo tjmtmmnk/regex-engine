@@ -8,12 +8,9 @@ import (
 )
 
 func TestBuild(t *testing.T) {
-	p := parser.NewParser("a*")
+	p := parser.NewParser("a|b")
 	ast := p.GetAST()
-	fmt.Println(ast.SubtreeString())
 	frg := ast.Assemble(common.NewContext())
 	nfa := frg.Build()
-	fmt.Println(nfa.Start)
-	fmt.Println(nfa.Accepts)
-	fmt.Println(nfa.Rules)
+	fmt.Println(nfa)
 }
