@@ -32,17 +32,17 @@ func (d *DFA) Minimize() {
 
 	seen := map[common.State]common.State{}
 	for i := 0; i < states.Cardinality(); i++ {
-		q1 := common.NewStateWithNumber(i)
+		toState := common.NewStateWithNumber(i)
 		for j := i + 1; j < states.Cardinality(); j++ {
-			q2 := common.NewStateWithNumber(j)
-			if !d.isEquivalent(q1, q2) {
+			fromState := common.NewStateWithNumber(j)
+			if !d.isEquivalent(fromState, toState) {
 				continue
 			}
-			if _, ok := seen[q2]; ok {
+			if _, ok := seen[fromState]; ok {
 				continue
 			}
-			seen[q2] = q1
-			d.mergeState(q1, q2)
+			seen[fromState] = toState
+			d.mergeState(fromState, toState)
 		}
 	}
 }
@@ -50,7 +50,8 @@ func (d *DFA) Minimize() {
 func (d *DFA) mergeState(from, to common.State) {
 	rules := d.Rules
 	for args, state := range rules {
-		if args.From == to && state == from {
+		// delete redundant state and its transition
+		if state == from {
 			rules[args] = to
 		}
 		if args.From == from {
