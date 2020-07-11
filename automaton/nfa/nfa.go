@@ -1,7 +1,6 @@
 package nfa
 
 import (
-	"fmt"
 	mapset "github.com/8ayac/golang-set"
 	"github.com/tjmtmmnk/regex-engine/automaton/common"
 	"github.com/tjmtmmnk/regex-engine/automaton/dfa"
@@ -31,7 +30,9 @@ func (nfa *NFA) ToWithoutEpsilon() {
 func (nfa *NFA) ToDFA() *dfa.DFA {
 	nfa.ToWithoutEpsilon()
 	start, accepts, rules := nfa.constructSubset()
-	return dfa.NewDFA(start, accepts, rules)
+	dfa := dfa.NewDFA(start, accepts, rules)
+	dfa.Minimize()
+	return dfa
 }
 
 func (nfa *NFA) constructSubset() (dStart common.State, dAccepts mapset.Set, dRules dfa.RuleMap) {
